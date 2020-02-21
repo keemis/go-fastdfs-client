@@ -16,6 +16,7 @@ import (
 )
 
 func main() {
+	// 配置
 	conf := &fdfs.Config{
 		TrackerAddrs: []string{"127.0.0.1:22122"},
 		MaxConn:      100,
@@ -27,6 +28,7 @@ func main() {
 	}
 	defer client.Destory()
 
+	// 上传
 	fileID, err := client.UploadByFilename("1.jpeg")
 	if err != nil {
 		fmt.Println(err.Error())
@@ -34,24 +36,28 @@ func main() {
 	}
 	fmt.Println("upload success: ", fileID)
 
+	// 下载
 	if err := client.DownloadToFile(fileID, "tempFile.jpg", 0, 0); err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 	fmt.Println("download file success")
 
+	// 下载 Buffer
 	if _, err := client.DownloadToBuffer(fileID, 0, 19); err != nil {
 		fmt.Println(err.Error())
 	} else {
 		fmt.Println("download buffer success")
 	}
 
+	// 删除
 	if err := client.DeleteFile(fileID); err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 	fmt.Println("delete success")
 
+	// 删除后再下载
 	if err := client.DownloadToFile(fileID, "tempFile2.jpg", 0, 0); err != nil {
 		fmt.Println("download after delete error: ", err.Error())
 		return
